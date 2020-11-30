@@ -25,6 +25,8 @@ dependencies {
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	compile group: 'org.postgresql', name: 'postgresql', version: '42.2.18'
+	compile group: 'org.apache.tomcat.embed', name: 'tomcat-embed-jasper', version: '9.0.40'
+	compile "javax.servlet:jstl:1.2"
 }
 
 test {
