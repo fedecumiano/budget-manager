@@ -1,4 +1,15 @@
+buildscript {
+	repositories {
+		mavenCentral()
+		jcenter()
+	}
+	dependencies {
+		classpath group: 'org.postgresql', name: 'postgresql', version: '42.2.12'
+	}
+}
+
 plugins {
+	id "org.flywaydb.flyway" version "6.1.4"
 	id 'org.springframework.boot' version '2.4.0'
 	id 'io.spring.dependency-management' version '1.0.10.RELEASE'
 	id 'java'
@@ -7,6 +18,15 @@ plugins {
 group = 'org.github.fedecumiano'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '11'
+
+def DB_DRIVER = "jdbc"
+def DB_PROTOCOL = "postgresql"
+def DB_HOST = "localhost"
+def DB_PORT = "5432"
+def DB_NAME = "budgetdb"
+def DB_USERNAME = "user"
+def DB_PASSWORD = "pass"
+def DB_URL = "${DB_DRIVER}:${DB_PROTOCOL}://${DB_HOST}:${DB_PORT}/${DB_NAME}"
 
 configurations {
 	compileOnly {
@@ -27,8 +47,17 @@ dependencies {
 	compile group: 'org.postgresql', name: 'postgresql', version: '42.2.18'
 	compile group: 'org.apache.tomcat.embed', name: 'tomcat-embed-jasper', version: '9.0.40'
 	compile "javax.servlet:jstl:1.2"
+
 }
 
 test {
 	useJUnitPlatform()
+}
+
+flyway {
+
+	url = DB_URL
+	user = DB_USERNAME
+	password = DB_PASSWORD
+	locations = ["filesystem:sql"]
 }
