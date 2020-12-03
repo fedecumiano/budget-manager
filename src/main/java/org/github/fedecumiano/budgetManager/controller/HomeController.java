@@ -39,4 +39,9 @@ public class HomeController {
             return "unloggedWelcome";
         }
     }
+
+    @GetMapping(value="/")
+    public String welcome(){
+        return "unloggedWelcome";
+    }
 }

@@ -5,6 +5,7 @@ buildscript {
 	}
 	dependencies {
 		classpath group: 'org.postgresql', name: 'postgresql', version: '42.2.12'
+		classpath "com.avast.gradle:gradle-docker-compose-plugin:0.12.1"
 	}
 }
 
@@ -14,6 +15,8 @@ plugins {
 	id 'io.spring.dependency-management' version '1.0.10.RELEASE'
 	id 'java'
 }
+
+apply plugin: 'docker-compose'
 
 group = 'org.github.fedecumiano'
 version = '0.0.1-SNAPSHOT'
@@ -61,3 +64,21 @@ flyway {
 	password = DB_PASSWORD
 	locations = ["filesystem:sql"]
 }
+
+dockerCompose {
+	useComposeFiles = ['docker-compose.yml']
+	startedServices = ['postgres']
+	forceRecreate = true
+	environment.put 'POSTGRES_DB', DB_NAME
+	environment.put 'POSTGRES_USER', DB_USERNAME
+	environment.put 'POSTGRES_PASSWORD', DB_PASSWORD
+}
+
+task prepareDB {
+	doLast{
+		print("DB is ready for use")
+	}
+}
+
+prepareDB.dependsOn(flywayMigrate)
+flywayMigrate.dependsOn(composeUp)
